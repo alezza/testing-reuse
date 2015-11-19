@@ -17,10 +17,10 @@
       </view>
       <view
             category="myplugin"
-            class="myplugin.views.TestDashboard2"
+            class="myplugin.views.TestResults"
             icon="icons/sample.gif"
-            id="myplugin.views.TestDashboard2"
-            name="Test Dashboard2">
+            id="myplugin.views.TestResults"
+            name="Test Results">
       </view>
    </extension>
    <extension

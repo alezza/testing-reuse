@@ -1,6 +1,13 @@
 package myplugin.views;
 
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.jdt.junit.launcher.JUnitLaunchShortcut;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -27,7 +34,44 @@ public class TestDashboard extends ViewPart {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
 				System.out.println("Button JUnit has been clicked");
-				//
+
+				try {
+					ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+					/*ILaunchConfigurationType[] types = manager.getLaunchConfigurationTypes();
+					for (ILaunchConfigurationType type:types) {
+						System.out.println(type.getName() + ": " + type.getIdentifier());
+						System.out.println();
+					}*/
+					ILaunchConfigurationType typ = manager.getLaunchConfigurationType("org.eclipse.jdt.junit.launchconfig");
+					ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(typ);
+					/*for (int i = 0; i < configurations.length; i++) {
+						ILaunchConfiguration configuration = configurations[i];
+						if (configuration.getName().equals("ConfigurationName")) {
+							configuration.delete();
+							break;
+						}
+					}*/
+					ILaunchConfiguration firstJUnitTestConfiguration = configurations[0];
+					firstJUnitTestConfiguration.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
+					
+				} catch (CoreException e) {
+					e.printStackTrace();
+				}
+
+				/*result = JUnitCore.runClasses(TestJunit.class);
+				System.out.println(result.getRunCount());
+				System.out.println(result.getRunTime());
+				System.out.println(result.getFailureCount());
+*/
+//				try {
+//					Process p = Runtime.getRuntime().exec("");
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				JUnitLaunchShortcut jUnitLaunchShortcut = new JUnitLaunchShortcut();
+				jUnitLaunchShortcut.launch("Pass the Java Project containing JUnits Classes", "run");
+
 			}
 			@Override
 			public void mouseDown(MouseEvent arg0) {}
