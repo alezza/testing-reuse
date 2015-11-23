@@ -69,8 +69,8 @@ public class TestDashboard extends ViewPart {
 //					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
-				JUnitLaunchShortcut jUnitLaunchShortcut = new JUnitLaunchShortcut();
-				jUnitLaunchShortcut.launch("Pass the Java Project containing JUnits Classes", "run");
+//				JUnitLaunchShortcut jUnitLaunchShortcut = new JUnitLaunchShortcut();
+//				jUnitLaunchShortcut.launch("Pass the Java Project containing JUnits Classes", "run");
 
 			}
 			@Override
@@ -84,7 +84,18 @@ public class TestDashboard extends ViewPart {
 		buttonSWTBot.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
+				try {
 				System.out.println("Button SWTBot has been clicked");
+				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+				ILaunchConfigurationType typ = manager.getLaunchConfigurationType("org.eclipse.swt.program");
+				ILaunchConfiguration[] configurations = manager.getLaunchConfigurations(typ);
+				ILaunchConfiguration firstJUnitTestConfiguration = configurations[0];
+				firstJUnitTestConfiguration.launch(ILaunchManager.RUN_MODE, new NullProgressMonitor());
+				}
+
+			catch (CoreException e) {
+				e.printStackTrace();
+			}			
 			}
 			
 			@Override

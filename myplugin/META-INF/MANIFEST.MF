@@ -15,3 +15,15 @@ Require-Bundle: org.eclipse.ui,
  junit2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.swtbot.eclipse.finder,
+ org.eclipse.swtbot.eclipse.finder.widgets,
+ org.eclipse.swtbot.swt.finder,
+ org.eclipse.swtbot.swt.finder.exceptions,
+ org.eclipse.swtbot.swt.finder.finders,
+ org.eclipse.swtbot.swt.finder.junit,
+ org.eclipse.swtbot.swt.finder.keyboard,
+ org.eclipse.swtbot.swt.finder.matchers,
+ org.eclipse.swtbot.swt.finder.results,
+ org.eclipse.swtbot.swt.finder.utils,
+ org.eclipse.swtbot.swt.finder.waits,
+ org.eclipse.swtbot.swt.finder.widgets
