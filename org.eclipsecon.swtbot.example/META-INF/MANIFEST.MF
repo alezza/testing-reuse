@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Example
+Bundle-SymbolicName: org.eclipsecon.swtbot.example;singleton=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipsecon.swtbot.example.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.hamcrest.core,
+ org.junit,
+ org.apache.log4j,
+ org.eclipse.swtbot.eclipse.gef.finder,
+ org.eclipse.swtbot.junit4_x,
+ org.eclipse.swtbot.eclipse.finder
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
