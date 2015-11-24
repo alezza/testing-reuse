@@ -1,0 +1,314 @@
+/*******************************************************************************
+ * Copyright (c) 2015 University of Luxembourg.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     Benoît Ries- initial implementation
+ ******************************************************************************/
+package lu.uni.lassy.excalibur.tests.swtbot.excalibur;
+
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellIsActive;
+
+import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotView;
+import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
+import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
+import org.eclipse.swtbot.swt.finder.keyboard.Keyboard;
+import org.eclipse.swtbot.swt.finder.keyboard.KeyboardFactory;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTree;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotTreeItem;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+
+import junit.framework.AssertionFailedError;
+import lu.uni.lassy.excalibur.common.ui.ExcaliburUiConstantsMessageDialogTitle;
+import lu.uni.lassy.excalibur.tests.swtbot.utils.SWTBotSupport;
+import lu.uni.lassy.excalibur.tests.swtbot.utils.UIStrings;
+import lu.uni.lassy.excalibur.ui.outline.views.providers.label.ExcaliburOutlineLabelProvider;
+import lu.uni.lassy.excalibur.ui.outline.wizards.newprojects.NewHelloWorldExampleProjectWizard;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@RunWith(SWTBotJunit4ClassRunner.class)
+public class ExcaliburGettingStartedShort extends SWTBotTestCase {
+	private final static Keyboard keyboard = KeyboardFactory.getSWTKeyboard();
+
+	private static SWTWorkbenchBot workbenchBot = new SWTWorkbenchBot();
+//	private static SWTGefBot gefBot = new SWTGefBot();
+	
+	//test project selection
+	public static String project = UIStrings.HELLOWORLD_PROJECT_NAME;
+
+	@BeforeClass //Initialization
+	public static void beforeClass() {
+		//close SICStus Prolog Path Not Configured
+		ExcaliburStartup.closeSICStusNotConfigured();
+
+		//close What's New dialog
+		ExcaliburStartup.closeWhatsNewDialogView();
+		
+		//close Welcome startup page
+		ExcaliburStartup.closeStartView(workbenchBot);
+
+		//set keyboard preferences
+		ExcaliburStartup.setKeyboardPreferenceMac();
+
+		//Startup.setPreferenceMac();
+		//Startup.setTexlipseMac();
+	}
+
+	@After //performed after each test
+	@Before //performed before each test
+	public void cleanWorkspace() {
+		SWTBotSupport.saveAll();
+		SWTBotSupport.closeAll();
+		try {
+			SWTBotShell shellViews = workbenchBot.shell("Save");
+			shellViews.activate();
+			workbenchBot.button("Yes").click();
+			workbenchBot.waitUntil(shellCloses(shellViews));
+		} catch (Exception e) {
+			System.out.println("Nothing to Save");
+		}
+		SWTBotSupport.waitForEndOfRunningJobs();
+	}
+	
+	@After
+	public void collapseAll() {
+		SWTBotSupport.collapseAllInOutlineView(project);
+	}
+
+/*	@After //performed after each test
+	public void resetWorkspace() {
+		try {
+			SWTBotEditor activeEditor = workbenchBot.activeEditor();
+			activeEditor.setFocus();
+			if (activeEditor.isDirty()) {
+				activeEditor.save();
+				SWTBotShell shellViews = workbenchBot.shell("Save");
+				shellViews.activate();
+				workbenchBot.button("Yes").click();
+				workbenchBot.waitUntil(shellCloses(shellViews));
+			}
+		} catch (Exception e) {
+			System.out.println("There is no active editor !");
+		}
+
+//		workbenchBot.closeAllShells();
+//		workbenchBot.resetActivePerspective();
+	
+		//SWTBotSupport.refreshSpecificationOutline();
+		//SWTBotSupport.refreshReportOutline();
+		
+		SWTBotSupport.waitForEndOfRunningJobs();
+	}*/
+
+	
+	@Test
+	public void GettingStartedShort_2_1() throws Exception {
+		//call Eclipse menu File->New->Other... then select Excalibur Standard Libraries Project
+		workbenchBot.menu(SWTBotSupport.ECLIPSE_MENU_FILE)
+					.menu(SWTBotSupport.ECLIPSE_MENU_FILE_NEW)
+					.menu(SWTBotSupport.ECLIPSE_MENU_FILE_NEW_OTHER)
+					.click();
+
+		SWTBotShell newWizardShell = SWTBotSupport.waitForWindowDialog("New");
+		SWTBotSupport.listAllWidgetsOfCurrentShell(newWizardShell.bot());
+		newWizardShell.setFocus();
+		SWTBotTree tree = newWizardShell.bot().tree();
+		tree.setFocus();
+		bot.sleep(1000);
+		tree.expandNode("Excalibur", true)
+			.expandNode("Projects")
+			.expandNode("Standard Libraries Projects")
+			.select();
+		
+		newWizardShell.bot().button("&Next >").click();
+		SWTBotSupport.closeWindowDialog("New", SWTBotSupport.BUTTON_FINISH);
+
+		//call Eclipse menu Excalibur->New->Example Projects->Hello World Example Project
+		workbenchBot.menu(SWTBotSupport.ECLIPSE_MENU_EXCALIBUR)
+/*					.menu(SWTBotSupport.ECLIPSE_MENU_NEW)
+					.menu(SWTBotSupport.ECLIPSE_MENU_EXCALIBUR_NEW_EXAMPLE_PROJECTS)
+					.menu(SWTBotSupport.ECLIPSE_MENU_EXCALIBUR_NEW_EXAMPLE_PROJECTS_HelloWorld)*/
+					.click();
+		
+		//wait for shell
+		workbenchBot.waitUntil(shellIsActive(NewHelloWorldExampleProjectWizard.WIZARD_TITLE_NEW_EXAMPLE_PROJECT), 120000);
+
+		//click on Finish
+		workbenchBot.button(SWTBotSupport.BUTTON_FINISH).click();
+
+		//wait for shell
+		try  {
+			workbenchBot.waitUntil(shellIsActive(ExcaliburUiConstantsMessageDialogTitle.LATEX_PREFERENCES_MUST_BE_SET), 120000);
+			bot.button(SWTBotSupport.BUTTON_OK).click();
+		} catch (Exception e) {
+			//Latex preference dialog didn't appear
+		}
+			
+
+//		bot.waitUntil(shellCloses(shellProj),500000);
+
+		//errors
+		try {
+			assertTrue(UIStrings.STD_LIBS + " was not created.", SWTBotSupport.isProjectCreated(UIStrings.STD_LIBS));
+			assertTrue(project + " was not created.", SWTBotSupport.isProjectCreated(project));
+			assertTrue(project + ".report was not created.", SWTBotSupport.isProjectCreated(project + ".report"));
+			assertTrue(project + ".simulation was not created.", SWTBotSupport.isProjectCreated(project + ".simulation"));
+//			assertTrue(StringSetup.SIM_REF + " was not created.", SWTBotSupport.isProjectCreated(StringSetup.SIM_REF));
+		} catch (AssertionFailedError e) {
+			fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void GettingStartedShort_2_2() throws Exception {
+		SWTBotSupport.collapseAllInOutlineView(project);
+		SWTBotTree specificationOutlineTree = SWTBotSupport.getExcaliburOutlineTree(project);
+		
+		String useCaseToOpen = "ugHelloWorld";
+		String useCaseSpecificationFileThatShouldBeOpened = "usecases.msr";
+
+		//double-click on useCase
+		specificationOutlineTree
+			.expandNode(project)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_SPEC_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_USE_CASE_MODEL_SPEC_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_USER_GOAL_USE_CASES_SPEC_NODE)
+			.getNode(useCaseToOpen)
+			.doubleClick();
+		
+		SWTBotEditor activeEditor = workbenchBot.activeEditor();
+		activeEditor.setFocus();
+		
+		assertTrue("Messir specification file for use-case" +  useCaseToOpen  + " was not opened.", activeEditor.getTitle().equals(useCaseSpecificationFileThatShouldBeOpened));
+	}
+	
+
+	@Test
+	public void GettingStartedShort_2_3() throws Exception {
+		SWTBotSupport.collapseAllInOutlineView(project);
+		SWTBotTree specificationOutlineTree = SWTBotSupport.getExcaliburOutlineTree(project);
+
+		String useCaseViewToOpen = "uc-ugHelloWorld";
+		
+		//double-click on useCase specification
+		SWTBotTreeItem item = specificationOutlineTree
+			.expandNode(project)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_ALL_VIEWS_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_USE_CASE_VIEWS_NODE);
+		item.getNode(SWTBotSupport.getChildNodeNameByNameSubstring(item, useCaseViewToOpen))
+			.doubleClick();
+		
+		SWTBotEditor activeEditor = workbenchBot.activeEditor();
+		activeEditor.setFocus();
+		
+		assertTrue("Use-case view " +  useCaseViewToOpen  + " was not opened.", activeEditor.getTitle().equals(useCaseViewToOpen));
+	}
+
+	@Test
+	public void GettingStartedShort_2_4() throws Exception {
+		SWTBotSupport.collapseAllInOutlineView(project);
+		SWTBotTree specificationOutlineTree = SWTBotSupport.getExcaliburOutlineTree(project);
+
+		String useCaseDocumentationToOpen = "ugHelloWorld";
+		String useCaseDocumentationFileThatShouldBeOpened = "UseCase-ugHelloWorld.msrd";
+		
+		//double-click on useCase documentation
+		SWTBotTreeItem item = specificationOutlineTree
+			.expandNode(project)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_REPORT_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_SECTION_2_3_USE_CASE_MODEL_REPORT_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_USE_CASES_REPORT_NODE);
+		item.getNode(SWTBotSupport.getChildNodeNameByNameSubstring(item, useCaseDocumentationToOpen))
+			.doubleClick();
+
+		SWTBotEditor activeEditor = workbenchBot.activeEditor();
+		activeEditor.setFocus();
+		
+		assertTrue("Use-case documentation " +  useCaseDocumentationToOpen  + " was not opened.", activeEditor.getTitle().equals(useCaseDocumentationFileThatShouldBeOpened));
+	}
+
+	@Test
+	public void GettingStartedShort_2_5() throws Exception {
+		SWTBotSupport.collapseAllInOutlineView(project);
+		SWTBotTree specificationOutlineTree = SWTBotSupport.getExcaliburOutlineTree(project);
+
+		String useCaseViewDocumentationToOpen = "uc-ugHelloWorld";
+		String useCaseViewDocumentationFileThatShouldBeOpened = "View-uc-ugHelloWorld.msrd";
+
+		specificationOutlineTree.expandNode(project, true);
+		//double-click on useCase documentation
+		SWTBotTreeItem item = specificationOutlineTree
+			.expandNode(project)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_REPORT_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_SECTION_2_3_USE_CASE_MODEL_REPORT_NODE)
+			.expandNode(ExcaliburOutlineLabelProvider.LABEL_USE_CASES_REPORT_NODE);
+		item.getNode(SWTBotSupport.getChildNodeNameByNameSubstring(item, useCaseViewDocumentationToOpen))
+			.doubleClick();
+
+		SWTBotEditor activeEditor = workbenchBot.activeEditor();
+		activeEditor.setFocus();
+
+		assertTrue("Use-case documentation " +  useCaseViewDocumentationToOpen  + " was not opened.", activeEditor.getTitle().equals(useCaseViewDocumentationFileThatShouldBeOpened));
+	}
+
+	@Test
+	public void GettingStartedShort_2_6() throws Exception {
+		SWTBotSupport.collapseAllInOutlineView(project);
+		SWTBotView specificationOutlineView = SWTBotSupport.getExcaliburOutlineView(project);
+
+		final String searchText = "ugHelloWorld";
+		String searchHitsExpected = "15";
+
+		SWTBotSupport.searchTextInSpecOutline(specificationOutlineView, searchText, keyboard);
+		
+		SWTBotSupport.waitForEndOfRunningJobs();
+
+		final SWTBotView specificationOutlineViewAfterSearch = SWTBotSupport.getExcaliburOutlineView(project);
+		bot.sleep(1000);
+		
+		assertTrue("There should be " + searchHitsExpected + " results for this search.", specificationOutlineViewAfterSearch.getReference().getTitle().contains("(" + searchHitsExpected + ")"));
+	}
+
+	@Test
+	public void GettingStartedShort_2_7() throws Exception {
+		SWTBotTree reportOutlineTree = SWTBotSupport.getExcaliburOutlineTree(project + ".report");
+
+		String reportFileToOpen = "report_SIM.pdf";
+		
+		//double-click on report.pdf file
+		reportOutlineTree.expandNode(project + ".report")
+			.getNode(reportFileToOpen)
+			.doubleClick();
+				
+//		SWTBotEditor activeEditor = workbenchBot.activeEditor();
+//		activeEditor.setFocus();
+
+		//TODO How todo this assert ?	
+		//assertTrue()
+	}
+
+
+	@AfterClass //All tests
+	public static void afterClass() {
+		try {
+			//do nothing
+		} catch (Exception e) {
+			System.out.println("after class");
+		}
+	}
+
+}

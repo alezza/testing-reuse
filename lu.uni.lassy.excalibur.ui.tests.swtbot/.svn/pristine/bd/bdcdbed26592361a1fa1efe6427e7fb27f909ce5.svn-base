@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+ <!--  <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=file">
+         <menu
+               id="lu.uni.lassy.excalibur.ui.menu"
+               label="Excalibur"
+               mnemonic="E">
+           <menu
+                  id="lu.uni.lassy.excalibur.ui.menu.test"
+                  label="Test"
+                  mnemonic="T">
+               <command
+                     commandId="lu.uni.lassy.excalibur.ui.commands.SWTBotTestCommand"
+                     id="lu.uni.lassy.excalibur.ui.menus.swtbottest"
+                     mnemonic="T">
+               </command>
+            </menu>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="lu.uni.lassy.excalibur.tests.swtbot.ui.handlers.SWTBotTestHandler"
+            commandId="lu.uni.lassy.excalibur.ui.commands.SWTBotTestCommand">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            categoryId="lu.uni.lassy.excalibur.ui.commands.categories.excalibur"
+            id="lu.uni.lassy.excalibur.ui.commands.SWTBotTestCommand"
+            name="Test Excalibur with SWTBot">
+      </command>
+   </extension>
+-->
+</plugin>
