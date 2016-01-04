@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="ITM Category"
+            id="ITM1">
+      </category>
+      <view
+            name="Test Dashboard"
+            icon="icons/sample.gif"
+            category="ITM1"
+            class="itm1.views.TestDashboard"
+            id="itm1.views.TestDashboard">
+      </view>
+      <view
+            name="View Results"
+            icon="icons/sample.gif"
+            category="ITM1"
+            class="itm1.views.TestResults"
+            id="itm1.views.TestResults">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="itm1.views.TestDashboard">
+         </view>
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="itm1.views.TestResults">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+
+</plugin>
